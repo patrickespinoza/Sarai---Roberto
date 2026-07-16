@@ -217,13 +217,12 @@ export default function Portada() {
           }}
           className="
             absolute
-            left-1/2
             top-10
             z-20
             w-full
             -translate-x-1/2
-            px-10
-            text-center
+            px-15
+            items-center
 
             sm:top-14
             md:top-16
@@ -235,7 +234,7 @@ export default function Portada() {
             <p
               className="
                 font-playfair
-                text-[10px]
+                text-[15px]
                 uppercase
                 tracking-[0.45em]
                 text-white/95
