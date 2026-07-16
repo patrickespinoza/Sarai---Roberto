@@ -1,250 +1,1160 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Check,
+  CheckCircle2,
+  Heart,
+  LoaderCircle,
+  MessageCircle,
+  Send,
+  UserRound,
+  UsersRound,
+} from "lucide-react";
 
-const Confirmacion = () => {
+const Confirmacion = ({
+  numeroNovia = "525586768565",
+  numeroNovio = "525536421895",
+  nombreNovia = "Sarai",
+  nombreNovio = "Roberto",
+}) => {
+  const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzaGJIphBdXIIkBYmqxudrelYEU-CJCNDWq5uykCdSawlhcS4KwHDnBloBXBa2_MlE6/exec";
+
+  const STORAGE_KEY = "confirmacion-sarai-roberto-enviada";
+
   const [nombreInvitado, setNombreInvitado] = useState("");
   const [mensajeInvitado, setMensajeInvitado] = useState("");
   const [asistencia, setAsistencia] = useState("");
   const [invitados, setInvitados] = useState("");
-  const [error, setError] = useState("");
-  const [enviando, setEnviando] = useState(false);
-  const [enviado, setEnviado] = useState(false);
 
-  const enviarConfirmacion = async () => {
-    if (!nombreInvitado.trim() || !asistencia) {
-      setError("Completa tu nombre y confirma tu asistencia.");
-      return;
+  const [error, setError] = useState("");
+  const [enviandoA, setEnviandoA] = useState("");
+  const [enviado, setEnviado] = useState(false);
+  const [destinatarioEnviado, setDestinatarioEnviado] = useState("");
+
+  /*
+    Revisa si ya se envió una confirmación durante esta sesión.
+    Esto evita que al actualizar la página se vuelva a enviar.
+  */
+  useEffect(() => {
+    const confirmacionGuardada = sessionStorage.getItem(STORAGE_KEY);
+
+    if (confirmacionGuardada) {
+      try {
+        const datos = JSON.parse(confirmacionGuardada);
+
+        setEnviado(true);
+        setDestinatarioEnviado(datos.destinatario || "");
+      } catch {
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
+
+  const formularioBloqueado = enviandoA !== "" || enviado;
+
+  const validarFormulario = () => {
+    if (!nombreInvitado.trim()) {
+      setError("Escribe tu nombre y apellido.");
+      return false;
+    }
+
+    if (!asistencia) {
+      setError("Selecciona si asistirás o no al evento.");
+      return false;
+    }
+
+    if (asistencia === "Sí asistiré") {
+      const cantidadInvitados = Number(invitados);
+
+      if (
+        !invitados ||
+        Number.isNaN(cantidadInvitados) ||
+        cantidadInvitados < 1
+      ) {
+        setError("Indica el número de personas que asistirán.");
+        return false;
+      }
     }
 
     setError("");
-    setEnviando(true);
-    setEnviado(false);
+    return true;
+  };
 
-    const data = {
-      nombre: nombreInvitado,
+  const crearMensajeWhatsApp = (destinatario) => {
+    const cantidad =
+      asistencia === "Sí asistiré"
+        ? invitados || "1"
+        : "No aplica";
+
+    const mensaje = [
+      `Hola ${destinatario} 💍`,
+      "",
+      "Quiero confirmar mi asistencia a la boda de Sarai y Roberto.",
+      "",
+      `Nombre: ${nombreInvitado.trim()}`,
+      `Asistencia: ${asistencia}`,
+      `Número de personas: ${cantidad}`,
+      mensajeInvitado.trim()
+        ? `Mensaje: ${mensajeInvitado.trim()}`
+        : "Mensaje: Sin mensaje adicional",
+      "",
+      "¡Gracias!",
+    ];
+
+    return mensaje.join("\n");
+  };
+
+  const enviarConfirmacion = async ({
+    lado,
+    numero,
+    destinatario,
+  }) => {
+    /*
+      Evita que una segunda pulsación ejecute nuevamente la función.
+    */
+    if (formularioBloqueado) return;
+
+    if (!validarFormulario()) return;
+
+    setEnviandoA(lado);
+    setError("");
+
+    /*
+      Se abre una pestaña vacía durante el clic directo.
+      Después se envía a WhatsApp cuando Excel confirma el registro.
+      Esto reduce el riesgo de que el navegador bloquee la ventana.
+    */
+    const ventanaWhatsApp = window.open("", "_blank");
+
+    const cantidadInvitados =
+      asistencia === "Sí asistiré"
+        ? Number(invitados)
+        : 0;
+
+    const datos = {
+      nombre: nombreInvitado.trim(),
       asistencia,
-      invitados,
-      mensaje: mensajeInvitado,
+      invitados: cantidadInvitados,
+      mensaje: mensajeInvitado.trim(),
+      lado,
     };
 
     try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbxklU9PTlqxkcu9pBUfWYhByQZ_7kJWuFENeeQhlEW-C6eh2cVbTK3z2AbMJiWVL1ME/exec",
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
+      const respuesta = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(datos),
+      });
+
+      /*
+        Google Apps Script puede devolver una respuesta opaca o una
+        redirección. Si fetch no lanza error, continuamos con WhatsApp.
+      */
+      const mensajeWhatsApp = crearMensajeWhatsApp(destinatario);
+
+      const telefonoLimpio = numero.replace(/\D/g, "");
+
+      const urlWhatsApp = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(
+        mensajeWhatsApp
+      )}`;
 
       setEnviado(true);
+      setDestinatarioEnviado(destinatario);
 
-      setNombreInvitado("");
-      setMensajeInvitado("");
-      setAsistencia("");
-      setInvitados("");
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          enviado: true,
+          lado,
+          destinatario,
+          fecha: new Date().toISOString(),
+        })
+      );
 
-      setTimeout(() => {
-        setEnviado(false);
-      }, 4000);
-    } catch (error) {
-      console.error("Error:", error);
-      setError("Hubo un error al enviar. Intenta nuevamente.");
-    } finally {
-      setEnviando(false);
+      if (ventanaWhatsApp) {
+        ventanaWhatsApp.location.href = urlWhatsApp;
+      } else {
+        window.location.href = urlWhatsApp;
+      }
+    } catch (errorFetch) {
+      console.error("Error al registrar la confirmación:", errorFetch);
+
+      if (ventanaWhatsApp) {
+        ventanaWhatsApp.close();
+      }
+
+      setError(
+        "No pudimos registrar tu confirmación. Revisa tu conexión e inténtalo nuevamente."
+      );
+
+      setEnviandoA("");
     }
   };
 
   return (
-    <section className="w-full bg-[#4A141D] py-24 px-5 overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: 55 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
-        viewport={{ once: true }}
+    <section
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#1A1C29]
+        px-5
+        py-20
+
+        sm:px-8
+        sm:py-24
+
+        lg:px-12
+        lg:py-28
+      "
+    >
+      {/* Resplandor superior */}
+      <div
         className="
-          max-w-5xl
+          pointer-events-none
+          absolute
+          -left-28
+          -top-32
+          h-96
+          w-96
+          rounded-full
+          bg-[#D1A697]/20
+          blur-[110px]
+
+          sm:h-[480px]
+          sm:w-[480px]
+        "
+      />
+
+      {/* Resplandor inferior */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          -bottom-40
+          -right-32
+          h-[430px]
+          w-[430px]
+          rounded-full
+          bg-[#3A415F]/70
+          blur-[120px]
+
+          sm:h-[540px]
+          sm:w-[540px]
+        "
+      />
+
+      {/* Línea superior */}
+      <div
+        className="
+          absolute
+          left-1/2
+          top-0
+          h-16
+          w-px
+          -translate-x-1/2
+          bg-gradient-to-b
+          from-[#D1A697]
+          to-transparent
+
+          sm:h-20
+        "
+      />
+
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 50,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.9,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        viewport={{
+          once: true,
+          amount: 0.1,
+        }}
+        className="
+          relative
+          z-10
           mx-auto
-          bg-[#F4E8DD]
-          rounded-tl-[4rem]
-          rounded-br-[4rem]
-          rounded-tr-2xl
-          rounded-bl-2xl
-          overflow-hidden
-          shadow-[0_30px_80px_rgba(0,0,0,.35)]
-          border
-          border-[#B88A8A]/40
+          max-w-7xl
         "
       >
-        <div className="grid lg:grid-cols-2">
-          <div className="relative min-h-[380px] lg:min-h-full overflow-hidden">
-            <img
-              src="/finalboda.webp"
-              alt="Confirmación de asistencia"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+        {/* ENCABEZADO */}
+        <div
+          className="
+            mx-auto
+            mb-12
+            max-w-3xl
+            text-center
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#4A141D]/60 via-transparent to-transparent"></div>
+            sm:mb-16
+          "
+        >
+          <div className="mb-5 flex items-center justify-center gap-4">
+            <span className="h-px w-10 bg-[#D1A697] sm:w-16" />
 
-            <div className="absolute bottom-8 left-8 right-8 text-white">
-              <p className="font-cursiveDancing text-5xl">
-                ¡Te esperamos!
-              </p>
-              <div className="w-20 h-px bg-[#F4E8DD] mt-5"></div>
-            </div>
-          </div>
+            <p
+              className="
+                font-playfair
+                text-[10px]
+                uppercase
+                tracking-[0.42em]
+                text-[#EDD2C2]
 
-          <div className="px-7 py-12 sm:px-12 sm:py-16">
-            <p className="uppercase tracking-[0.35em] text-[#B88A8A] text-xs sm:text-sm font-semibold">
+                sm:text-xs
+              "
+            >
               RSVP
             </p>
 
-            <h2 className="font-playfair text-[#4A141D] text-4xl sm:text-5xl mt-4 leading-tight">
-              Confirmar Asistencia
-            </h2>
+            <span className="h-px w-10 bg-[#D1A697] sm:w-16" />
+          </div>
 
-            <p className="mt-5 text-[#4A141D]/70 leading-7">
-              Por favor confirma tu asistencia. Nos encantará compartir este día tan especial contigo.
-            </p>
+          <h2
+            className="
+              font-cursiveDancing
+              text-6xl
+              leading-none
+              text-[#F6F4F0]
 
-            <div className="w-24 h-px bg-[#B88A8A] my-8"></div>
+              sm:text-7xl
+              md:text-8xl
+            "
+          >
+            Confirmación
+          </h2>
 
-            <div className="space-y-5">
-              <input
-                type="text"
-                placeholder="Nombre y apellido"
-                value={nombreInvitado}
-                onChange={(e) => setNombreInvitado(e.target.value)}
-                className="
-                  w-full
-                  bg-white/80
-                  border
-                  border-[#B88A8A]/40
-                  rounded-2xl
-                  px-5
-                  py-4
-                  text-[#4A141D]
-                  placeholder:text-[#4A141D]/45
-                  outline-none
-                  focus:ring-2
-                  focus:ring-[#4A141D]/40
-                "
+          <p
+            className="
+              mx-auto
+              mt-6
+              max-w-xl
+              font-playfair
+              text-sm
+              leading-7
+              text-[#F6F4F0]/70
+
+              sm:text-base
+            "
+          >
+            Ayúdanos a preparar cada detalle confirmando tu asistencia.
+          </p>
+        </div>
+
+        {/* TARJETA PRINCIPAL */}
+        <div
+          className="
+            relative
+            grid
+            overflow-hidden
+            rounded-[34px]
+            border
+            border-[#D1A697]/30
+            bg-[#F6F4F0]
+            shadow-[0_35px_100px_rgba(0,0,0,0.35)]
+
+            lg:grid-cols-[0.78fr_1.22fr]
+            lg:rounded-[44px]
+          "
+        >
+          {/* IMAGEN */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: -40,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            transition={{
+              duration: 0.9,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            viewport={{ once: true }}
+            className="
+              relative
+              min-h-[430px]
+              overflow-hidden
+
+              sm:min-h-[520px]
+
+              lg:min-h-[820px]
+            "
+          >
+            <img
+              src="/Final.JPG"
+              alt="Sarai y Roberto"
+              className="
+                absolute
+                inset-0
+                h-full
+                w-full
+                object-cover
+                object-center
+              "
+            />
+
+            <div
+              className="
+                absolute
+                inset-0
+                bg-gradient-to-t
+                from-[#1A1C29]/95
+                via-[#1A1C29]/20
+                to-black/10
+              "
+            />
+
+            {/* Marco interior */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-5
+                rounded-[25px]
+                border
+                border-white/25
+
+                sm:inset-7
+                sm:rounded-[30px]
+              "
+            />
+
+            <div
+              className="
+                absolute
+                bottom-0
+                left-0
+                right-0
+                z-10
+                px-8
+                pb-12
+
+                sm:px-12
+                sm:pb-14
+
+                lg:px-10
+              "
+            >
+              <Heart
+                size={26}
+                strokeWidth={1.35}
+                className="mb-6 text-[#D1A697]"
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setAsistencia("Sí asistiré")}
-                  className={`
-                    py-4 rounded-2xl border transition duration-300 font-playfair
-                    ${
-                      asistencia === "Sí asistiré"
-                        ? "bg-[#4A141D] text-[#F4E8DD] border-[#4A141D]"
-                        : "bg-white/70 text-[#4A141D] border-[#B88A8A]/40 hover:bg-white"
-                    }
-                  `}
-                >
-                  Sí asistiré
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setAsistencia("No podré asistir")}
-                  className={`
-                    py-4 rounded-2xl border transition duration-300 font-playfair
-                    ${
-                      asistencia === "No podré asistir"
-                        ? "bg-[#4A141D] text-[#F4E8DD] border-[#4A141D]"
-                        : "bg-white/70 text-[#4A141D] border-[#B88A8A]/40 hover:bg-white"
-                    }
-                  `}
-                >
-                  No asistiré
-                </button>
-              </div>
-
-              <input
-                type="number"
-                min="1"
-                placeholder="Número de invitados"
-                value={invitados}
-                onChange={(e) => setInvitados(e.target.value)}
+              <p
                 className="
-                  w-full
-                  bg-white/80
-                  border
-                  border-[#B88A8A]/40
-                  rounded-2xl
-                  px-5
-                  py-4
-                  text-[#4A141D]
-                  placeholder:text-[#4A141D]/45
-                  outline-none
-                  focus:ring-2
-                  focus:ring-[#4A141D]/40
-                "
-              />
-
-              <textarea
-                placeholder="Mensaje para los novios"
-                value={mensajeInvitado}
-                onChange={(e) => setMensajeInvitado(e.target.value)}
-                rows="4"
-                className="
-                  w-full
-                  bg-white/80
-                  border
-                  border-[#B88A8A]/40
-                  rounded-2xl
-                  px-5
-                  py-4
-                  text-[#4A141D]
-                  placeholder:text-[#4A141D]/45
-                  outline-none
-                  resize-none
-                  focus:ring-2
-                  focus:ring-[#4A141D]/40
-                "
-              />
-
-              {error && (
-                <p className="text-[#4A141D] bg-[#B88A8A]/20 border border-[#B88A8A]/40 rounded-xl px-4 py-3 text-sm">
-                  {error}
-                </p>
-              )}
-
-              {enviado && (
-                <p className="text-[#4A141D] bg-white/70 border border-[#B88A8A]/40 rounded-xl px-4 py-3 text-sm">
-                  Confirmación enviada correctamente.
-                </p>
-              )}
-
-              <button
-                type="button"
-                onClick={enviarConfirmacion}
-                disabled={enviando}
-                className="
-                  w-full
-                  bg-[#4A141D]
-                  text-[#F4E8DD]
-                  py-4
-                  rounded-full
                   font-playfair
-                  text-lg
-                  shadow-[0_18px_40px_rgba(74,20,29,.35)]
-                  hover:bg-[#6B1F2A]
-                  hover:scale-[1.02]
-                  transition
-                  duration-300
-                  disabled:opacity-60
-                  disabled:cursor-not-allowed
+                  text-[20px]
+                  uppercase
+                  tracking-[0.36em]
+                  text-[#EDD2C2]
                 "
               >
-                {enviando ? "Enviando..." : "Enviar Confirmación"}
-              </button>
+                Cantares 8:6
+              </p>
+
+              <p
+                className="
+                  mt-5
+                  max-w-md
+                  font-cursiveDancing
+                  text-4xl
+                  leading-tight
+                  text-white
+
+                  sm:text-5xl
+                "
+              >
+                Ponme como un sello sobre tu corazón
+              </p>
+
+              <div className="mt-7 h-px w-20 bg-[#D1A697]" />
             </div>
-          </div>
+          </motion.div>
+
+          {/* FORMULARIO */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: 40,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            transition={{
+              duration: 0.9,
+              delay: 0.1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            viewport={{ once: true }}
+            className="
+              relative
+              px-6
+              py-12
+
+              sm:px-10
+              sm:py-14
+
+              lg:flex
+              lg:min-h-[820px]
+              lg:flex-col
+              lg:justify-center
+              lg:px-14
+              lg:py-16
+
+              xl:px-16
+            "
+          >
+            <div
+              className="
+                pointer-events-none
+                absolute
+                -right-20
+                -top-20
+                h-64
+                w-64
+                rounded-full
+                bg-[#EDD2C2]/55
+                blur-[80px]
+              "
+            />
+
+            <div className="relative z-10">
+              <p
+                className="
+                  font-playfair
+                  text-[10px]
+                  uppercase
+                  tracking-[0.38em]
+                  text-[#D1A697]
+
+                  sm:text-xs
+                "
+              >
+                Reserva tu lugar
+              </p>
+
+              <h3
+                className="
+                  mt-4
+                  font-playfair
+                  text-3xl
+                  leading-tight
+                  text-[#1A1C29]
+
+                  sm:text-4xl
+                  md:text-5xl
+                "
+              >
+                ¿Nos acompañas?
+              </h3>
+
+              <p
+                className="
+                  mt-5
+                  max-w-2xl
+                  font-playfair
+                  text-sm
+                  leading-7
+                  text-[#3A415F]/80
+
+                  sm:text-base
+                "
+              >
+                Completa tus datos y selecciona a cuál de los novios deseas
+                enviar tu confirmación.
+              </p>
+
+              <div className="my-8 h-px w-full bg-[#D1A697]/35" />
+
+              {/* FORMULARIO */}
+              <div className="space-y-5">
+                {/* Nombre */}
+                <label className="block">
+                  <span
+                    className="
+                      mb-2
+                      block
+                      font-playfair
+                      text-[10px]
+                      uppercase
+                      tracking-[0.25em]
+                      text-[#3A415F]/75
+                    "
+                  >
+                    Nombre y apellido
+                  </span>
+
+                  <div className="relative">
+                    <UserRound
+                      size={19}
+                      strokeWidth={1.5}
+                      className="
+                        pointer-events-none
+                        absolute
+                        left-5
+                        top-1/2
+                        -translate-y-1/2
+                        text-[#D1A697]
+                      "
+                    />
+
+                    <input
+                      type="text"
+                      placeholder="Escribe tu nombre completo"
+                      value={nombreInvitado}
+                      disabled={formularioBloqueado}
+                      onChange={(event) =>
+                        setNombreInvitado(event.target.value)
+                      }
+                      className="
+                        w-full
+                        rounded-[18px]
+                        border
+                        border-[#D1A697]/40
+                        bg-white/75
+                        py-4
+                        pl-14
+                        pr-5
+                        font-playfair
+                        text-[#1A1C29]
+                        outline-none
+                        transition
+                        duration-300
+
+                        placeholder:text-[#3A415F]/40
+
+                        focus:border-[#3A415F]
+                        focus:ring-2
+                        focus:ring-[#3A415F]/10
+
+                        disabled:cursor-not-allowed
+                        disabled:opacity-65
+                      "
+                    />
+                  </div>
+                </label>
+
+                {/* Asistencia */}
+                <div>
+                  <span
+                    className="
+                      mb-3
+                      block
+                      font-playfair
+                      text-[10px]
+                      uppercase
+                      tracking-[0.25em]
+                      text-[#3A415F]/75
+                    "
+                  >
+                    Confirma tu asistencia
+                  </span>
+
+                  <div
+                    className="
+                      grid
+                      grid-cols-1
+                      gap-3
+
+                      sm:grid-cols-2
+                    "
+                  >
+                    <button
+                      type="button"
+                      disabled={formularioBloqueado}
+                      onClick={() => {
+                        setAsistencia("Sí asistiré");
+                        setError("");
+                      }}
+                      className={`
+                        flex
+                        items-center
+                        justify-center
+                        gap-3
+                        rounded-[18px]
+                        border
+                        px-5
+                        py-4
+                        font-playfair
+                        text-sm
+                        transition
+                        duration-300
+
+                        disabled:cursor-not-allowed
+                        disabled:opacity-65
+
+                        ${
+                          asistencia === "Sí asistiré"
+                            ? "border-[#1A1C29] bg-[#1A1C29] text-[#F6F4F0] shadow-[0_12px_28px_rgba(26,28,41,0.18)]"
+                            : "border-[#D1A697]/40 bg-white/75 text-[#1A1C29] hover:border-[#D1A697] hover:bg-[#EDD2C2]/35"
+                        }
+                      `}
+                    >
+                      <Check size={18} strokeWidth={1.7} />
+                      Sí asistiré
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={formularioBloqueado}
+                      onClick={() => {
+                        setAsistencia("No podré asistir");
+                        setInvitados("");
+                        setError("");
+                      }}
+                      className={`
+                        flex
+                        items-center
+                        justify-center
+                        gap-3
+                        rounded-[18px]
+                        border
+                        px-5
+                        py-4
+                        font-playfair
+                        text-sm
+                        transition
+                        duration-300
+
+                        disabled:cursor-not-allowed
+                        disabled:opacity-65
+
+                        ${
+                          asistencia === "No podré asistir"
+                            ? "border-[#3A415F] bg-[#3A415F] text-[#F6F4F0] shadow-[0_12px_28px_rgba(58,65,95,0.18)]"
+                            : "border-[#D1A697]/40 bg-white/75 text-[#1A1C29] hover:border-[#D1A697] hover:bg-[#EDD2C2]/35"
+                        }
+                      `}
+                    >
+                      No podré asistir
+                    </button>
+                  </div>
+                </div>
+
+                {/* Invitados */}
+                <AnimatePresence initial={false}>
+                  {asistencia === "Sí asistiré" && (
+                    <motion.label
+                      initial={{
+                        opacity: 0,
+                        height: 0,
+                        y: -8,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        height: "auto",
+                        y: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        height: 0,
+                        y: -8,
+                      }}
+                      transition={{
+                        duration: 0.35,
+                      }}
+                      className="block overflow-hidden"
+                    >
+                      <span
+                        className="
+                          mb-2
+                          block
+                          font-playfair
+                          text-[10px]
+                          uppercase
+                          tracking-[0.25em]
+                          text-[#3A415F]/75
+                        "
+                      >
+                        Número de personas
+                      </span>
+
+                      <div className="relative">
+                        <UsersRound
+                          size={19}
+                          strokeWidth={1.5}
+                          className="
+                            pointer-events-none
+                            absolute
+                            left-5
+                            top-1/2
+                            -translate-y-1/2
+                            text-[#D1A697]
+                          "
+                        />
+
+                        <input
+                          type="number"
+                          min="1"
+                          inputMode="numeric"
+                          placeholder="Ejemplo: 2"
+                          value={invitados}
+                          disabled={formularioBloqueado}
+                          onChange={(event) =>
+                            setInvitados(event.target.value)
+                          }
+                          className="
+                            w-full
+                            rounded-[18px]
+                            border
+                            border-[#D1A697]/40
+                            bg-white/75
+                            py-4
+                            pl-14
+                            pr-5
+                            font-playfair
+                            text-[#1A1C29]
+                            outline-none
+                            transition
+                            duration-300
+
+                            placeholder:text-[#3A415F]/40
+
+                            focus:border-[#3A415F]
+                            focus:ring-2
+                            focus:ring-[#3A415F]/10
+
+                            disabled:cursor-not-allowed
+                            disabled:opacity-65
+                          "
+                        />
+                      </div>
+                    </motion.label>
+                  )}
+                </AnimatePresence>
+
+                {/* Mensaje */}
+                <label className="block">
+                  <span
+                    className="
+                      mb-2
+                      block
+                      font-playfair
+                      text-[10px]
+                      uppercase
+                      tracking-[0.25em]
+                      text-[#3A415F]/75
+                    "
+                  >
+                    Mensaje para los novios
+                  </span>
+
+                  <textarea
+                    placeholder="Escribe un mensaje especial..."
+                    value={mensajeInvitado}
+                    disabled={formularioBloqueado}
+                    onChange={(event) =>
+                      setMensajeInvitado(event.target.value)
+                    }
+                    rows={4}
+                    className="
+                      w-full
+                      resize-none
+                      rounded-[18px]
+                      border
+                      border-[#D1A697]/40
+                      bg-white/75
+                      px-5
+                      py-4
+                      font-playfair
+                      text-[#1A1C29]
+                      outline-none
+                      transition
+                      duration-300
+
+                      placeholder:text-[#3A415F]/40
+
+                      focus:border-[#3A415F]
+                      focus:ring-2
+                      focus:ring-[#3A415F]/10
+
+                      disabled:cursor-not-allowed
+                      disabled:opacity-65
+                    "
+                  />
+                </label>
+
+                {/* Error */}
+                <AnimatePresence>
+                  {error && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        y: -8,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -8,
+                      }}
+                      className="
+                        rounded-[16px]
+                        border
+                        border-[#D1A697]/50
+                        bg-[#EDD2C2]/45
+                        px-5
+                        py-4
+                      "
+                    >
+                      <p
+                        className="
+                          font-playfair
+                          text-sm
+                          leading-6
+                          text-[#1A1C29]
+                        "
+                      >
+                        {error}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* Confirmación enviada */}
+                <AnimatePresence>
+                  {enviado && (
+                    <motion.div
+                      initial={{
+                        opacity: 0,
+                        y: 12,
+                        scale: 0.98,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      className="
+                        rounded-[22px]
+                        border
+                        border-[#D1A697]/55
+                        bg-[#EDD2C2]/45
+                        px-5
+                        py-5
+                        text-center
+                      "
+                    >
+                      <CheckCircle2
+                        size={28}
+                        strokeWidth={1.5}
+                        className="mx-auto text-[#1A1C29]"
+                      />
+
+                      <p
+                        className="
+                          mt-3
+                          font-playfair
+                          text-base
+                          text-[#1A1C29]
+                        "
+                      >
+                        Confirmación registrada correctamente.
+                      </p>
+
+                      {destinatarioEnviado && (
+                        <p
+                          className="
+                            mt-2
+                            font-playfair
+                            text-sm
+                            text-[#3A415F]/75
+                          "
+                        >
+                          Se abrió WhatsApp para enviarla a{" "}
+                          {destinatarioEnviado}.
+                        </p>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                {/* BOTONES DE WHATSAPP */}
+                <div
+                  className="
+                    grid
+                    grid-cols-1
+                    gap-3
+                    pt-2
+
+                    sm:grid-cols-2
+                  "
+                >
+                  <motion.button
+                    type="button"
+                    disabled={formularioBloqueado}
+                    onClick={() =>
+                      enviarConfirmacion({
+                        lado: "Novia",
+                        numero: numeroNovia,
+                        destinatario: nombreNovia,
+                      })
+                    }
+                    whileHover={
+                      formularioBloqueado ? {} : { y: -3, scale: 1.01 }
+                    }
+                    whileTap={
+                      formularioBloqueado ? {} : { scale: 0.98 }
+                    }
+                    className="
+                      flex
+                      min-h-[60px]
+                      w-full
+                      items-center
+                      justify-center
+                      gap-3
+                      rounded-full
+                      bg-[#D1A697]
+                      px-5
+                      py-4
+                      font-playfair
+                      text-sm
+                      text-[#1A1C29]
+                      shadow-[0_14px_30px_rgba(209,166,151,0.28)]
+                      transition
+                      duration-300
+
+                      hover:bg-[#EDD2C2]
+
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
+                    "
+                  >
+                    {enviandoA === "Novia" ? (
+                      <>
+                        <LoaderCircle
+                          size={19}
+                          strokeWidth={1.7}
+                          className="animate-spin"
+                        />
+                        Registrando...
+                      </>
+                    ) : enviado ? (
+                      <>
+                        <CheckCircle2 size={19} strokeWidth={1.7} />
+                        Confirmación enviada
+                      </>
+                    ) : (
+                      <>
+                        <MessageCircle size={19} strokeWidth={1.7} />
+                        Confirmar con {nombreNovia}
+                      </>
+                    )}
+                  </motion.button>
+
+                  <motion.button
+                    type="button"
+                    disabled={formularioBloqueado}
+                    onClick={() =>
+                      enviarConfirmacion({
+                        lado: "Novio",
+                        numero: numeroNovio,
+                        destinatario: nombreNovio,
+                      })
+                    }
+                    whileHover={
+                      formularioBloqueado ? {} : { y: -3, scale: 1.01 }
+                    }
+                    whileTap={
+                      formularioBloqueado ? {} : { scale: 0.98 }
+                    }
+                    className="
+                      flex
+                      min-h-[60px]
+                      w-full
+                      items-center
+                      justify-center
+                      gap-3
+                      rounded-full
+                      bg-[#1A1C29]
+                      px-5
+                      py-4
+                      font-playfair
+                      text-sm
+                      text-[#F6F4F0]
+                      shadow-[0_14px_30px_rgba(26,28,41,0.24)]
+                      transition
+                      duration-300
+
+                      hover:bg-[#3A415F]
+
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
+                    "
+                  >
+                    {enviandoA === "Novio" ? (
+                      <>
+                        <LoaderCircle
+                          size={19}
+                          strokeWidth={1.7}
+                          className="animate-spin"
+                        />
+                        Registrando...
+                      </>
+                    ) : enviado ? (
+                      <>
+                        <CheckCircle2 size={19} strokeWidth={1.7} />
+                        Confirmación enviada
+                      </>
+                    ) : (
+                      <>
+                        <Send size={19} strokeWidth={1.7} />
+                        Confirmar con {nombreNovio}
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+
+                {!enviado && (
+                  <p
+                    className="
+                      pt-1
+                      text-center
+                      font-playfair
+                      text-xs
+                      italic
+                      leading-6
+                      text-[#3A415F]/60
+                    "
+                  >
+                    Al seleccionar un botón, tu confirmación se registrará y
+                    después se abrirá WhatsApp.
+                  </p>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </motion.div>
+
+      {/* Línea inferior */}
+      <div
+        className="
+          absolute
+          bottom-0
+          left-1/2
+          h-16
+          w-px
+          -translate-x-1/2
+          bg-gradient-to-t
+          from-[#D1A697]
+          to-transparent
+
+          sm:h-20
+        "
+      />
     </section>
   );
 };

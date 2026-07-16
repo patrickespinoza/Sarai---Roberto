@@ -1,115 +1,479 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 const Vestimenta = ({
   imagen = "/dresscode.png",
+  codigo = "Formal",
+  descripcion = "Nos encantará verte elegante para celebrar este día tan especial junto a nosotros.",
 }) => {
   return (
-    <section className="w-full bg-[#F4E8DD] py-20 px-5 overflow-hidden">
-      <motion.div
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: "easeOut" }}
-        viewport={{ once: true }}
+    <section
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-[#F6F4F0]
+        px-5
+        py-20
+
+        sm:px-8
+        sm:py-24
+
+        lg:px-12
+        lg:py-28
+      "
+    >
+      {/* Resplandor superior */}
+      <div
         className="
-          max-w-6xl
-          mx-auto
-          bg-white/70
-          backdrop-blur-xl
-          rounded-tl-[4rem]
-          rounded-br-[4rem]
-          rounded-tr-2xl
-          rounded-bl-2xl
-          shadow-[0_25px_70px_rgba(74,20,29,.16)]
-          border border-[#B88A8A]/30
-          overflow-hidden
+          pointer-events-none
+          absolute
+          -left-24
+          -top-28
+          h-80
+          w-80
+          rounded-full
+          bg-[#EDD2C2]/70
+          blur-[90px]
+
+          sm:h-96
+          sm:w-96
         "
-      >
-        <div className="grid lg:grid-cols-2">
+      />
 
-          {/* IMAGEN */}
+      {/* Resplandor inferior */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          -bottom-32
+          -right-24
+          h-80
+          w-80
+          rounded-full
+          bg-[#3A415F]/15
+          blur-[100px]
 
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9 }}
-            viewport={{ once: true }}
-            className="overflow-hidden"
-          >
-            <img
-              src={imagen}
-              alt="Dress Code"
+          sm:h-[430px]
+          sm:w-[430px]
+        "
+      />
+
+      {/* Línea superior */}
+      <div
+        className="
+          absolute
+          left-1/2
+          top-0
+          h-16
+          w-px
+          -translate-x-1/2
+          bg-gradient-to-b
+          from-[#D1A697]
+          to-transparent
+
+          sm:h-20
+        "
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
+        {/* ENCABEZADO */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          className="
+            mx-auto
+            mb-12
+            max-w-3xl
+            text-center
+
+            sm:mb-16
+          "
+        >
+          <div className="mb-5 flex items-center justify-center gap-4">
+            <span className="h-px w-10 bg-[#D1A697] sm:w-16" />
+
+            <p
               className="
-                w-full
-                h-full
-                min-h-[420px]
-                object-cover
-                hover:scale-105
-                transition-transform
-                duration-700
+                font-playfair
+                text-[25px]
+                uppercase
+                tracking-[0.42em]
+                text-[#3A415F]
+
+                sm:text-xs
               "
-            />
-          </motion.div>
+            >
+              Nuestro día
+            </p>
 
-          {/* TEXTO */}
+            <span className="h-px w-10 bg-[#D1A697] sm:w-16" />
+          </div>
 
+        </motion.div>
+
+        {/* CONTENIDO */}
+        <div
+          className="
+            relative
+            mx-auto
+            grid
+            max-w-6xl
+            items-center
+            gap-8
+
+            lg:grid-cols-[0.95fr_1.05fr]
+            lg:gap-0
+          "
+        >
+          {/* IMAGEN */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: .15 }}
-            viewport={{ once: true }}
+            initial={{
+              opacity: 0,
+              x: -45,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            transition={{
+              duration: 0.9,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
             className="
-              flex
-              flex-col
-              justify-center
-              px-8
-              py-14
-              sm:px-14
+              relative
+              z-10
+              mx-auto
+              w-full
+              max-w-[560px]
+
+              lg:mx-0
             "
           >
+            {/* Fondo desplazado */}
+            <div
+              className="
+                absolute
+                -bottom-4
+                -left-4
+                h-full
+                w-full
+                rounded-[30px]
+                border
+                border-[#D1A697]/50
+                bg-[#EDD2C2]
 
-            <p className="uppercase tracking-[.35em] text-[#B88A8A] text-sm font-semibold">
-              Nuestro Día
-            </p>
+                sm:-bottom-6
+                sm:-left-6
+                sm:rounded-[36px]
+              "
+            />
 
-            <h2 className="font-playfair text-[#4A141D] text-5xl mt-5">
-              Detalles
-            </h2>
+            {/* Contenedor de imagen */}
+            <div
+              className="
+                group
+                relative
+                overflow-hidden
+                rounded-[30px]
+                border
+                border-[#D1A697]/35
+                bg-white
+                shadow-[0_25px_70px_rgba(26,28,41,0.16)]
 
-            <div className="w-24 h-px bg-[#B88A8A] my-8"></div>
+                sm:rounded-[36px]
+              "
+            >
+              <img
+                src={imagen}
+                alt="Código de vestimenta formal"
+                className="
+                  h-[640px]
+                  w-full
+                  object-cover
+                  object-center
+                  transition-transform
+                  duration-1000
 
-            <h3 className="font-cursiveDancing text-[#B88A8A] text-5xl">
-              Código de Vestimenta
-            </h3>
+                  group-hover:scale-105
 
-            <p className="mt-8 text-[#4A141D] text-3xl font-playfair">
-              Formal
-            </p>
+                  sm:h-[670px]
 
-            <p className="mt-6 text-[#4A141D]/70 leading-8 text-lg">
-              Nos encantará verte elegante para celebrar este
-              día tan especial junto a nosotros.
-            </p>
+                  lg:h-[850px]
+                "
+              />
 
-            <div className="my-10 w-16 h-px bg-[#B88A8A]"></div>
+              {/* Sombra inferior */}
+              <div
+                className="
+                  pointer-events-none
+                  absolute
+                  inset-x-0
+                  bottom-0
+                  h-40
+                  bg-gradient-to-t
+                  from-[#1A1C29]/45
+                  to-transparent
+                "
+              />
 
-            <h3 className="font-cursiveDancing text-[#B88A8A] text-5xl">
-              Evento
-            </h3>
+              {/* Etiqueta inferior */}
+              <div
+                className="
+                  absolute
+                  bottom-6
+                  left-1/2
+                  flex
+                  -translate-x-1/2
+                  items-center
+                  gap-3
+                  rounded-full
+                  border
+                  border-white/30
+                  bg-white/15
+                  px-6
+                  py-3
+                  text-white
+                  backdrop-blur-md
+                "
+              >
+                <Sparkles size={17} strokeWidth={1.6} />
 
-            <p className="mt-6 text-[#4A141D] text-2xl font-playfair">
-              Solo para adultos
-            </p>
+                <span
+                  className="
+                    whitespace-nowrap
+                    font-playfair
+                    text-[10px]
+                    uppercase
+                    tracking-[0.3em]
 
-            <p className="mt-4 text-[#4A141D]/70 leading-8">
-              Gracias por comprender y permitirnos disfrutar
-              juntos de una velada especial.
-            </p>
-
+                    sm:text-xs
+                  "
+                >
+                  Elegancia especial
+                </span>
+              </div>
+            </div>
           </motion.div>
 
+          {/* TARJETA DE TEXTO */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              x: 45,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            transition={{
+              duration: 0.9,
+              delay: 0.1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            className="
+              relative
+              z-20
+              overflow-hidden
+              rounded-[32px]
+              bg-[#1A1C29]
+              px-7
+              py-12
+              text-center
+              shadow-[0_28px_80px_rgba(26,28,41,0.24)]
+
+              sm:px-12
+              sm:py-14
+
+              lg:-ml-10
+              lg:rounded-[38px]
+              lg:px-14
+              lg:py-16
+              lg:text-left
+
+              xl:-ml-16
+              xl:px-16
+            "
+          >
+            {/* Resplandor nude */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                -right-24
+                -top-24
+                h-72
+                w-72
+                rounded-full
+                bg-[#D1A697]/18
+                blur-[85px]
+              "
+            />
+
+            {/* Resplandor azul */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                -bottom-28
+                -left-24
+                h-72
+                w-72
+                rounded-full
+                bg-[#3A415F]/65
+                blur-[90px]
+              "
+            />
+
+            {/* Marco interior */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-4
+                rounded-[25px]
+                border
+                border-[#EDD2C2]/20
+
+                sm:inset-5
+                sm:rounded-[30px]
+              "
+            />
+
+            <div className="relative z-10">
+              {/* Icono */}
+              <div
+                className="
+                  mx-auto
+                  mb-7
+                  flex
+                  h-14
+                  w-14
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-[#D1A697]/55
+                  bg-[#D1A697]/10
+                  text-[#D1A697]
+
+                  lg:mx-0
+                "
+              >
+                <Sparkles size={23} strokeWidth={1.5} />
+              </div>
+
+              <p
+                className="
+                  font-playfair
+                  text-[10px]
+                  uppercase
+                  tracking-[0.38em]
+                  text-[#EDD2C2]
+
+                  sm:text-xs
+                "
+              >
+                Dress code
+              </p>
+
+              <h3
+                className="
+                  mt-4
+                  font-playfair
+                  text-4xl
+                  leading-tight
+                  text-[#F6F4F0]
+
+                  sm:text-5xl
+                  lg:text-6xl
+                "
+              >
+                {codigo}
+              </h3>
+
+              <div
+                className="
+                  mx-auto
+                  my-8
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+
+                  lg:mx-0
+                  lg:justify-start
+                "
+              >
+                <span className="h-px w-12 bg-[#D1A697]" />
+
+                <span
+                  className="
+                    h-2
+                    w-2
+                    rotate-45
+                    bg-[#D1A697]
+                  "
+                />
+
+                <span className="h-px w-12 bg-[#D1A697]" />
+              </div>
+
+              <p
+                className="
+                  mx-auto
+                  max-w-xl
+                  font-playfair
+                  text-base
+                  leading-8
+                  text-[#F6F4F0]/80
+
+                  sm:text-lg
+
+                  lg:mx-0
+                "
+              >
+                {descripcion}
+              </p>
+
+            </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Línea inferior */}
+      <div
+        className="
+          absolute
+          bottom-0
+          left-1/2
+          h-16
+          w-px
+          -translate-x-1/2
+          bg-gradient-to-t
+          from-[#D1A697]
+          to-transparent
+
+          sm:h-20
+        "
+      />
     </section>
   );
 };
