@@ -249,6 +249,46 @@ export default function Portada() {
             <span className="h-px w-8 bg-white/70 sm:w-14" />
           </div>
         </motion.div>
+        {/* FRASE SUPERIOR */}
+<motion.p
+  initial={{
+    opacity: 0,
+    y: -20,
+  }}
+  animate={{
+    opacity: 1,
+    y: 0,
+  }}
+  transition={{
+    duration: 0.8,
+    delay: 0.55,
+  }}
+  className="
+    absolute
+    top-24
+    z-30
+    w-full
+    -translate-x-1/2
+    px-8
+    items-center
+    font-playfair
+    text-[15px]
+    uppercase
+    tracking-[0.35em]
+    text-white
+    drop-shadow-[0_3px_12px_rgba(0,0,0,0.75)]
+
+    sm:top-28
+    sm:text-xs
+    sm:tracking-[0.4em]
+
+    md:top-32
+    md:px-12
+    md:text-sm
+  "
+>
+  El inicio de nuestro para siempre
+</motion.p>
 
         {/* CONTENIDO PRINCIPAL */}
         <div
@@ -295,35 +335,6 @@ export default function Portada() {
               md:text-left
             "
           >
-            {/* Frase */}
-            <motion.p
-              variants={{
-                oculto: {
-                  opacity: 0,
-                  y: 24,
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.8,
-                  },
-                },
-              }}
-              className="
-                mb-4
-                font-playfair
-                text-[15px]
-                uppercase
-                tracking-[0.4em]
-                text-white
-
-                sm:text-xs
-                md:mb-5
-              "
-            >
-              El inicio de nuestro para siempre
-            </motion.p>
 
             {/* NOMBRES */}
             <motion.div

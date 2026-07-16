@@ -443,11 +443,6 @@ const Confirmacion = ({
                 lg:px-10
               "
             >
-              <Heart
-                size={26}
-                strokeWidth={1.35}
-                className="mb-4 text-[#D1A697]"
-              />
 
               <p
                 className="
