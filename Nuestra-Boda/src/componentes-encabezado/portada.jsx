@@ -313,10 +313,10 @@ export default function Portada() {
               className="
                 mb-4
                 font-playfair
-                text-[11px]
+                text-[15px]
                 uppercase
                 tracking-[0.4em]
-                text-white/85
+                text-white
 
                 sm:text-xs
                 md:mb-5

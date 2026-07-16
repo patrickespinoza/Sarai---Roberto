@@ -446,16 +446,16 @@ const Confirmacion = ({
               <Heart
                 size={26}
                 strokeWidth={1.35}
-                className="mb-6 text-[#D1A697]"
+                className="mb-4 text-[#D1A697]"
               />
 
               <p
                 className="
                   font-playfair
-                  text-[20px]
+                  text-[15px]
                   uppercase
                   tracking-[0.36em]
-                  text-[#EDD2C2]
+                  text-white
                 "
               >
                 Cantares 8:6
@@ -463,7 +463,6 @@ const Confirmacion = ({
 
               <p
                 className="
-                  mt-5
                   max-w-md
                   font-cursiveDancing
                   text-4xl
@@ -476,7 +475,7 @@ const Confirmacion = ({
                 Ponme como un sello sobre tu corazón
               </p>
 
-              <div className="mt-7 h-px w-20 bg-[#D1A697]" />
+              <div className=" h-px w-20 bg-[#D1A697]" />
             </div>
           </motion.div>
 
