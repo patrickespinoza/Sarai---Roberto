@@ -235,6 +235,7 @@ export default function Portada() {
               className="
                 font-playfair
                 text-[15px]
+                text-center
                 uppercase
                 tracking-[0.45em]
                 text-white
