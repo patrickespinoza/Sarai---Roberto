@@ -64,6 +64,7 @@ const Spotify = ({
       rounded-full
       font-playfair
       text-lg
+      text-center
       font-semibold
       shadow-[0_15px_35px_rgba(0,0,0,.25)]
       hover:bg-[#E4C4B5]
