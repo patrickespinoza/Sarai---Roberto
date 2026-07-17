@@ -8,6 +8,9 @@ const Spotify = ({
 }) => {
   return (
     <section className="relative overflow-hidden bg-white py-24 px-5">
+          <p className="uppercase  text-center tracking-[.35em] text-black text-lg font-semibold">
+            Nuestra Música
+          </p>
 
       {/* Glow */}
       <div className="absolute -top-32 -left-24 w-80 h-80 rounded-full  blur-[100px]" />
@@ -84,15 +87,12 @@ const Spotify = ({
 
           <div className="flex flex-col justify-center px-8 py-14 sm:px-14">
 
-            <p className="uppercase  text-center tracking-[.35em] text-black text-lg font-semibold">
-              Nuestra Música
-            </p>
 
             
 
             <div className="w-24 h-px bg-white my-8"></div>
 
-            <img src="/sello.png" alt="sello spotify" />
+            <img src="/Spotify1.png" alt="sello spotify" />
 
 
           </div>

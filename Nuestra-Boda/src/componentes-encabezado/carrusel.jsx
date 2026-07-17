@@ -21,6 +21,11 @@ const Carousel = () => {
       position: "center 20%",
     },
     {
+      src: "/Carrusel02.png",
+      alt: "Sarai y Roberto",
+      position: "center 20%",
+    },
+    {
       src: "/Carrusel03.png",
       alt: "Retrato de Sarai y Roberto",
       position: "center 25%",
