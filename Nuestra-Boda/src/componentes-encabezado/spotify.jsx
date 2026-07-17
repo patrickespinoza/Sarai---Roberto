@@ -89,7 +89,7 @@ const Spotify = ({
           <div className="flex flex-col justify-center px-8 py-14 sm:px-14">
 
 
-            <img className="h-64 w-64" src="/Spotify2.png" alt="sello spotify" />
+            <img className="h-64 w-64 translate-x-4" src="/Spotify2.png" alt="sello spotify" />
 
 
           </div>
