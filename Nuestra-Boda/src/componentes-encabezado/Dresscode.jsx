@@ -267,7 +267,7 @@ const Vestimenta = ({
             <p
               className="
                 font-playfair
-                text-[20px]
+                text-[10px]
                 uppercase
                 tracking-[0.35em]
                 text-[#D1A697]
@@ -511,7 +511,7 @@ const Vestimenta = ({
             <p
               className="
                 font-playfair
-                text-[20px]
+                text-[10px]
                 uppercase
                 tracking-[0.35em]
                 text-[#D1A697]
