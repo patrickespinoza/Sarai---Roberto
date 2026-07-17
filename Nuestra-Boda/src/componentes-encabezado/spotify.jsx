@@ -92,7 +92,7 @@ const Spotify = ({
 
             <div className="w-24 h-px bg-white my-8"></div>
 
-            <img src="/Spotify1.png" alt="sello spotify" />
+            <img src="/Spotify2.png" alt="sello spotify" />
 
 
           </div>
