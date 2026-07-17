@@ -7,8 +7,8 @@ const Spotify = ({
   link = "https://open.spotify.com/playlist/6Ye6LP8eXe2rFrSLFeZHNg?si=EgXyLkAwS92dyqSFgiktZA&utm_source=copy-link&pi=XysnaEdKSnW3y",
 }) => {
   return (
-    <section className="relative overflow-hidden bg-white py-24 px-5">
-          <p className="uppercase  text-center tracking-[.35em] text-black text-lg font-semibold">
+    <section className="relative overflow-hidden bg-[#e9bcac] font-playfair py-24 px-5">
+          <p className="uppercase  text-center tracking-[.35em] text-black text-xl m-3 font-semibold">
             Nuestra Música
           </p>
 
@@ -25,7 +25,8 @@ const Spotify = ({
       >
         <div
           className="
-            bg-white
+            
+            bg-[#EDD2C2]/70
             rounded-[2.8rem]
             overflow-hidden
             shadow-[0_25px_70px_rgba(26,28,41,.15)]
@@ -88,11 +89,7 @@ const Spotify = ({
           <div className="flex flex-col justify-center px-8 py-14 sm:px-14">
 
 
-            
-
-            <div className="w-24 h-px bg-white my-8"></div>
-
-            <img src="/Spotify2.png" alt="sello spotify" />
+            <img className="h-64 w-64" src="/Spotify2.png" alt="sello spotify" />
 
 
           </div>
