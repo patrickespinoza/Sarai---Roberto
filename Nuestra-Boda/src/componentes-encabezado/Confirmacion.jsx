@@ -890,6 +890,7 @@ const Confirmacion = ({
                   mt-4
                   font-playfair
                   text-3xl
+                  text-center
                   leading-tight
                   text-[#1A1C29]
 

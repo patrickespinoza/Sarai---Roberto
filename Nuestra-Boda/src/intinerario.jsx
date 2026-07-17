@@ -5,6 +5,7 @@ import Celebracion from "./componentes-encabezado/Ubicacion";
 import Dresscode from "./componentes-encabezado/Dresscode";
 import Regalos from "./componentes-encabezado/Regalos";
 import Confirmacion from "./componentes-encabezado/Confirmacion";
+import Spotify from "./componentes-encabezado/spotify";
 
 export default function Intinerario() {
   return (
@@ -22,6 +23,8 @@ export default function Intinerario() {
       <Regalos />
 
       <Confirmacion />
+
+      <Spotify/>
     </div>
   );
 }
