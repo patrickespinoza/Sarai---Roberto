@@ -737,7 +737,7 @@ const Confirmacion = ({
             "
           >
             <img
-              src="/Final.JPG"
+              src="/Final.png"
               alt="Sarai y Roberto"
               className="
                 absolute
@@ -794,6 +794,7 @@ const Confirmacion = ({
                 className="
                   font-playfair
                   text-[15px]
+                  text-center
                   uppercase
                   tracking-[0.36em]
                   text-white
@@ -807,6 +808,7 @@ const Confirmacion = ({
                   max-w-md
                   font-cursiveDancing
                   text-4xl
+                  text-center
                   leading-tight
                   text-white
 

@@ -16,29 +16,34 @@ const Carousel = () => {
   */
   const images = [
     {
-      src: "/Carrusel01.JPG",
+      src: "/Carrusel01.png",
       alt: "Sarai y Roberto",
-      position: "center center",
+      position: "center 20%",
     },
     {
-      src: "/Carrusel02.JPG",
+      src: "/Carrusel02.png",
       alt: "Sarai y Roberto compartiendo un momento especial",
       position: "center 30%",
     },
     {
-      src: "/Carrusel03.JPG",
+      src: "/Carrusel03.png",
       alt: "Retrato de Sarai y Roberto",
       position: "center 25%",
     },
     {
-      src: "/Carrusel04.JPG",
+      src: "/Carrusel04.png",
       alt: "Sarai y Roberto juntos",
       position: "center 35%",
     },
     {
-      src: "/Carrusel05.JPG",
+      src: "/Carrusel05.png",
       alt: "Momentos de Sarai y Roberto",
       position: "center 30%",
+    },
+    {
+      src: "/Carrusel06.png",
+      alt: "Momentos de Sarai y Roberto",
+      position: " center",
     },
   ];
 
@@ -505,6 +510,58 @@ const Carousel = () => {
                 </motion.p>
               </div>
 
+
+              {/* INDICADORES */}
+              <div
+                className="
+                  absolute
+                  bottom-7
+                  left-1/2
+                  z-30
+                  flex
+                  -translate-x-1/2
+                  items-center
+                  gap-2
+
+                  sm:bottom-9
+                  sm:gap-3
+                "
+              >
+                {images.map((imagen, i) => (
+                  <button
+                    key={imagen.src}
+                    type="button"
+                    onClick={() => goToImage(i)}
+                    aria-label={`Mostrar fotografía ${i + 1}`}
+                    className="
+                      flex
+                      h-6
+                      items-center
+                      justify-center
+                    "
+                  >
+                    <motion.span
+                      animate={{
+                        width: index === i ? 34 : 8,
+                        backgroundColor:
+                          index === i ? "#EDD2C2" : "rgba(246,244,240,0.45)",
+                      }}
+                      transition={{
+                        duration: 0.3,
+                      }}
+                      className="
+                        block
+                        h-1.5
+                        rounded-full
+                      "
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
               {/* BOTÓN IZQUIERDO */}
               <motion.button
                 type="button"
@@ -580,58 +637,6 @@ const Carousel = () => {
               >
                 <FaChevronRight size={16} />
               </motion.button>
-
-              {/* INDICADORES */}
-              <div
-                className="
-                  absolute
-                  bottom-7
-                  left-1/2
-                  z-30
-                  flex
-                  -translate-x-1/2
-                  items-center
-                  gap-2
-
-                  sm:bottom-9
-                  sm:gap-3
-                "
-              >
-                {images.map((imagen, i) => (
-                  <button
-                    key={imagen.src}
-                    type="button"
-                    onClick={() => goToImage(i)}
-                    aria-label={`Mostrar fotografía ${i + 1}`}
-                    className="
-                      flex
-                      h-6
-                      items-center
-                      justify-center
-                    "
-                  >
-                    <motion.span
-                      animate={{
-                        width: index === i ? 34 : 8,
-                        backgroundColor:
-                          index === i ? "#EDD2C2" : "rgba(246,244,240,0.45)",
-                      }}
-                      transition={{
-                        duration: 0.3,
-                      }}
-                      className="
-                        block
-                        h-1.5
-                        rounded-full
-                      "
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Leyenda inferior */}
         <motion.div
           initial={{ opacity: 0 }}

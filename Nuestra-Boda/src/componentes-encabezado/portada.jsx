@@ -97,7 +97,7 @@ export default function Portada() {
 
         {/* FOTOGRAFÍA */}
         <motion.img
-          src="/Portada.jpg"
+          src="/Portada.png"
           alt="Sarai y Roberto"
           initial={{ scale: 1.06 }}
           animate={{ scale: 1 }}
@@ -221,7 +221,7 @@ export default function Portada() {
             z-20
             w-full
             -translate-x-1/2
-            px-15
+            px-16
             items-center
 
             sm:top-14
@@ -237,7 +237,8 @@ export default function Portada() {
                 text-[15px]
                 uppercase
                 tracking-[0.45em]
-                text-white/95
+                text-white
+                
 
                 sm:text-xs
               "
@@ -270,8 +271,9 @@ export default function Portada() {
     -translate-x-1/2
     px-8
     items-center
+    text-center
     font-playfair
-    text-[15px]
+    text-[17px]
     uppercase
     tracking-[0.35em]
     text-white
@@ -745,8 +747,21 @@ export default function Portada() {
                     sm:text-[15px]
                   "
                 >
-                  Hemos preparado esta invitación con mucho cariño. Disfruta
-                  nuestra historia acompañada de música.
+                  Hemos preparado esta invitación con mucho cariño. 
+                </p>
+                <p
+                  className="
+                    mx-auto
+                    max-w-[310px]
+                    font-playfair
+                    text-sm
+                    leading-7
+                    text-[#3A415F]
+
+                    sm:text-[15px]
+                  "
+                >
+                  Disfruta nuestra historia acompañada de música.
                 </p>
 
                 {/* BOTONES */}

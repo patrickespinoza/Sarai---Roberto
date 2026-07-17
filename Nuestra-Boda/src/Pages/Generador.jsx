@@ -343,7 +343,7 @@ export default function Generador() {
           "
         >
           <img
-            src="/Final.JPG"
+            src="/Final.png"
             alt="Sarai y Roberto"
             className="
               absolute

@@ -231,6 +231,7 @@ const Contador = ({
                 font-playfair
                 text-7xl
                 leading-none
+                text-center
                 text-[#D1A697]/50
 
                 sm:text-8xl
@@ -257,6 +258,21 @@ const Contador = ({
               {texto}
             </p>
           </div>
+
+          <span
+              className="
+                block
+                font-playfair
+                text-7xl
+                text-center
+                leading-none
+                text-[#D1A697]/50
+
+                sm:text-8xl
+              "
+            >
+              “
+            </span>
 
           <div className="relative z-10 mt-10">
             <div

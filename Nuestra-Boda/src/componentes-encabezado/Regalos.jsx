@@ -224,7 +224,6 @@ const Regalos = ({
             variants={animacionEntrada}
             className="
               relative
-              grid
               overflow-hidden
               rounded-[34px]
               border
@@ -232,30 +231,27 @@ const Regalos = ({
               bg-[#F6F4F0]
               shadow-[0_30px_85px_rgba(26,28,41,0.16)]
 
-              lg:grid-cols-[1fr_0.85fr]
-              lg:rounded-[44px]
+              
             "
           >
             {/* COLUMNA DE TEXTO */}
             <div
               className="
-                relative
-                flex
-                flex-col
-                justify-center
-                px-7
-                py-12
-                text-center
+  relative
+  flex
+  flex-col
+  justify-center
+  items-center
+  px-7
+  py-12
+  text-center
 
-                sm:px-12
-                sm:py-16
+  sm:px-12
+  sm:py-16
 
-                lg:min-h-[620px]
-                lg:px-16
-                lg:text-left
-
-                xl:px-20
-              "
+  lg:min-h-[620px]
+  lg:px-20
+"
             >
               {/* Acento lateral */}
               <div
@@ -366,8 +362,11 @@ const Regalos = ({
                   lg:mx-0
                 "
               >
-                El mejor regalo será contar con su presencia y celebrar juntos
-                este momento tan especial.
+                Nuestro mejor regalo será compartir este dia con ustedes.
+                <p>
+                  
+                Como nuestro hogar ya cuenta con todo lo necesario (electrodomésticos).
+                  </p>  
               </motion.p>
 
               <motion.p
@@ -377,18 +376,18 @@ const Regalos = ({
                   mt-5
                   max-w-xl
                   font-playfair
-                  text-sm
+                  text-lg
                   italic
                   leading-7
                   text-[#3A415F]/75
 
-                  sm:text-base
+                  sm:text-lg
 
                   lg:mx-0
                 "
               >
-                Para quienes deseen tener un detalle adicional con nosotros,
-                hemos preparado una opción de transferencia bancaria.
+                Si deseas tener un detalle 
+                adicional con nosotros, hemos preparado una opcion de tranferencia bancaria.
               </motion.p>
 
               <motion.button
@@ -434,256 +433,7 @@ const Regalos = ({
               </motion.button>
             </div>
 
-            {/* COLUMNA VISUAL */}
-            <div
-              className="
-                relative
-                flex
-                min-h-[440px]
-                items-center
-                justify-center
-                overflow-hidden
-                bg-[#1A1C29]
-                px-6
-                py-14
-
-                sm:min-h-[500px]
-                sm:px-10
-
-                lg:min-h-[620px]
-              "
-            >
-              {/* Resplandores */}
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  -right-24
-                  -top-24
-                  h-72
-                  w-72
-                  rounded-full
-                  bg-[#D1A697]/20
-                  blur-[90px]
-                "
-              />
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  -bottom-28
-                  -left-24
-                  h-80
-                  w-80
-                  rounded-full
-                  bg-[#3A415F]/75
-                  blur-[100px]
-                "
-              />
-
-              {/* Marco interior */}
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-5
-                  rounded-[28px]
-                  border
-                  border-[#EDD2C2]/20
-
-                  sm:inset-7
-                  sm:rounded-[34px]
-                "
-              />
-
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 35,
-                  rotate: -2,
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                  rotate: 0,
-                }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.9,
-                  delay: 0.2,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="
-                  relative
-                  z-10
-                  w-full
-                  max-w-[360px]
-                "
-              >
-                {/* Tarjeta posterior */}
-                <div
-                  className="
-                    absolute
-                    -bottom-4
-                    -right-4
-                    h-full
-                    w-full
-                    rounded-[28px]
-                    border
-                    border-[#D1A697]/40
-                    bg-[#3A415F]
-
-                    sm:-bottom-6
-                    sm:-right-6
-                  "
-                />
-
-                {/* Tarjeta bancaria decorativa */}
-                <div
-                  className="
-                    relative
-                    overflow-hidden
-                    rounded-[28px]
-                    border
-                    border-[#EDD2C2]/25
-                    bg-gradient-to-br
-                    from-[#F6F4F0]
-                    via-[#EDD2C2]
-                    to-[#D1A697]
-                    px-6
-                    py-7
-                    shadow-[0_28px_70px_rgba(0,0,0,0.3)]
-
-                    sm:px-8
-                    sm:py-9
-                  "
-                >
-                  <div
-                    className="
-                      pointer-events-none
-                      absolute
-                      -right-16
-                      -top-16
-                      h-40
-                      w-40
-                      rounded-full
-                      border
-                      border-white/45
-                    "
-                  />
-
-                  <div
-                    className="
-                      pointer-events-none
-                      absolute
-                      -right-8
-                      -top-8
-                      h-28
-                      w-28
-                      rounded-full
-                      border
-                      border-white/35
-                    "
-                  />
-
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p
-                          className="
-                            font-playfair
-                            text-[9px]
-                            uppercase
-                            tracking-[0.3em]
-                            text-[#3A415F]/65
-                          "
-                        >
-                          Detalle especial
-                        </p>
-
-                        <p
-                          className="
-                            mt-2
-                            font-playfair
-                            text-2xl
-                            text-[#1A1C29]
-
-                            sm:text-3xl
-                          "
-                        >
-                          Para los novios
-                        </p>
-                      </div>
-
-                      <div
-                        className="
-                          flex
-                          h-11
-                          w-11
-                          shrink-0
-                          items-center
-                          justify-center
-                          rounded-full
-                          bg-[#1A1C29]
-                          text-[#F6F4F0]
-                        "
-                      >
-                        <Gift size={20} strokeWidth={1.5} />
-                      </div>
-                    </div>
-
-                    <div
-                      className="
-                        mt-12
-                        h-9
-                        w-12
-                        rounded-md
-                        bg-gradient-to-br
-                        from-[#F6F4F0]
-                        to-[#D1A697]
-                        shadow-inner
-                      "
-                    />
-
-                    <div className="mt-9 flex items-end justify-between gap-4">
-                      <div>
-                        <p
-                          className="
-                            font-playfair
-                            text-[9px]
-                            uppercase
-                            tracking-[0.25em]
-                            text-[#3A415F]/60
-                          "
-                        >
-                          Con amor
-                        </p>
-
-                        <p
-                          className="
-                            mt-2
-                            font-cursiveDancing
-                            text-3xl
-                            text-[#1A1C29]
-
-                            sm:text-4xl
-                          "
-                        >
-                          Sarai & Roberto
-                        </p>
-                      </div>
-
-                      <Heart
-                        size={25}
-                        strokeWidth={1.35}
-                        className="text-[#1A1C29]/75"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
+            
           </motion.div>
         </motion.div>
 
